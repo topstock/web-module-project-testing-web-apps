@@ -64,7 +64,7 @@ test('renders "lastName is a required field" if an last name is not entered and 
 
     const submitButton = screen.getByRole('button');
     userEvent.click(submitButton);
-    const lastNameRequiredError = screen.getByText('lastName is a required field');
+    const lastNameRequiredError = screen.getByText(/lastName is a required field/);
     
     expect(lastNameRequiredError).toBeInTheDocument();
 });
@@ -80,18 +80,37 @@ test('renders all firstName, lastName and email text when submitted. Does NOT re
     userEvent.type(emailField, 'lorem@ipsum.dolor');
     const submitButton = screen.getByRole('button');
     userEvent.click(submitButton);
-    const firstNameElements = screen.getAllByText('Lorem');
-    const lastNameElements = screen.getAllByText('Ipsum');
-    const emailElements = screen.getAllByText('lorem@ipsum.dolor');
+    const firstNameElement = screen.getByText('Lorem');
+    const lastNameElement = screen.getByText('Ipsum');
+    const emailElement = screen.getByText('lorem@ipsum.dolor');
     const messageElements = screen.getAllByText(/message/i);
 
-    expect(firstNameElements.length).toBe(2);
-    expect(lastNameElements.length).toBe(2);
-    expect(emailElements.length).toBe(2);
-    expect(messageElements.length).toBe(0);
+    expect(firstNameElement).toBeInTheDocument();
+    expect(lastNameElement).toBeInTheDocument();
+    expect(emailElement).toBeInTheDocument();
+    expect(messageElements.length).toBe(1);
 });
 
 test('renders all fields text when all fields are submitted.', async () => {
     render(<ContactForm />);
-    
+
+    const firstName = screen.getByPlaceholderText('Edd');
+    userEvent.type(firstName, 'Lorem');
+    const lastName = screen.getByPlaceholderText('Burke');
+    userEvent.type(lastName, 'Ipsum');
+    const emailField = screen.getByPlaceholderText('bluebill1049@hotmail.com');
+    userEvent.type(emailField, 'lorremm@ippssum.dolllor');
+    const messageField = screen.getByLabelText('Message');
+    userEvent.type(messageField, 'Lllooorem ippppusm dollllor seppppt');
+    const submitButton = screen.getByRole('button');
+    userEvent.click(submitButton);
+    const firstNameElement = screen.getByText('Lorem');
+    const lastNameElement = screen.getByText('Ipsum');
+    const emailElement = screen.getByText('lorremm@ippssum.dolllor');
+    const messageElement = screen.getByText('Lllooorem ippppusm dollllor seppppt');
+
+    expect(firstNameElement).toBeInTheDocument();
+    expect(lastNameElement).toBeInTheDocument();
+    expect(emailElement).toBeInTheDocument();
+    expect(messageElement).toBeInTheDocument();
 });
