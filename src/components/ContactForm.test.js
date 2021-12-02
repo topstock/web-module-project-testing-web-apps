@@ -21,7 +21,7 @@ test('renders the contact form header', ()=> {
 
 test('renders ONE error message if user enters less then 5 characters into firstname.', async () => {
     render(<ContactForm />);
-
+   
     const firstName = screen.getByPlaceholderText('Edd');
     userEvent.type(firstName, 'Lore');
     const shortFirstNameErrors = await screen.findAllByText(/error/i);
@@ -31,7 +31,9 @@ test('renders ONE error message if user enters less then 5 characters into first
 
 test('renders THREE error messages if user enters no values into any fields.', async () => {
     render(<ContactForm />);
-    
+
+    const submitButton = screen.getByRole('button');
+    userEvent.click(submitButton);
     const emptyFieldsErrors = await screen.findAllByText(/error/i);
  
     expect(emptyFieldsErrors.length).toBe(3);
@@ -44,6 +46,8 @@ test('renders ONE error message if user enters a valid first name and last name 
     userEvent.type(firstName, 'Lorem');
     const lastName = screen.getByPlaceholderText('Burke');
     userEvent.type(lastName, 'Ipsum');
+    const submitButton = screen.getByRole('button');
+    userEvent.click(submitButton);
     const allErrors = await screen.findAllByText(/error/i);
     
     expect(allErrors.length).toBe(1);
@@ -54,7 +58,7 @@ test('renders "email must be a valid email address" if an invalid email is enter
     
     const emailField = screen.getByPlaceholderText('bluebill1049@hotmail.com');
     userEvent.type(emailField, 'LoremIpsum@dolor');
-    const validEmailError = screen.getByText('email must be a valid email address');
+    const validEmailError = screen.getByText(/email must be a valid email address/);
 
     expect(validEmailError).toBeInTheDocument();
 });
